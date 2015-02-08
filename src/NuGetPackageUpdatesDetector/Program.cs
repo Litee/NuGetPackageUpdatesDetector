@@ -40,8 +40,10 @@ namespace NuGetPackageUpdatesDetector
                 PrintUsage();
                 Environment.Exit(-1);
             }
-            var allowPrereleaseVersions = args.Any(x => x.StartsWith("-Pre"));
+            var allowPrereleaseVersions = args.Any(x => x.StartsWith("-Prerelease"));
             Log.InfoFormat("Prerelease versions: {0}", allowPrereleaseVersions ? "Allowed" :"Not allowed");
+            var sourceRepository = args.SkipWhile(x => x != "-Source").FirstOrDefault(x => !x.StartsWith("-")) ?? "https://www.nuget.org/api/v2/";
+            Log.InfoFormat("Source repository: {0}", sourceRepository);
             var targetFile = Path.Combine(Environment.CurrentDirectory, args[0]);
             Log.InfoFormat("File to process: {0}", targetFile);
             if (!File.Exists(targetFile))
@@ -52,8 +54,7 @@ namespace NuGetPackageUpdatesDetector
             }
             else
             {
-                // TODO custom sources
-                IPackageRepository sourcePackageRepository = PackageRepositoryFactory.Default.CreateRepository("https://www.nuget.org/api/v2/");
+                IPackageRepository sourcePackageRepository = PackageRepositoryFactory.Default.CreateRepository(sourceRepository);
                 var fileType = FileTypeDetector.Detect(targetFile);
                 switch (fileType)
                 {
@@ -102,7 +103,7 @@ namespace NuGetPackageUpdatesDetector
                         break;
                 }
             }
-            Log.Info("Work is finished!");
+            Log.Info("Finished!");
         }
 
         private void ProcessPackageConfigFile(string packagesConfigFile, IPackageRepository sourcePackageRepository, bool allowPrereleaseVersions)
@@ -124,7 +125,7 @@ namespace NuGetPackageUpdatesDetector
             Console.Out.WriteLine(customAttributes.OfType<AssemblyCopyrightAttribute>().First().Copyright);
             Console.Out.WriteLine("This is free software distributed under Apache License 2.0");
             Console.Out.WriteLine();
-            Console.Out.WriteLine("Usage: NuGetPackageUpdatesDetector.exe (<path-to-packages-config-file> | <path-to-visual-studio-solution-file> | <path-to-solution-cop-config>) [ -Prerelease ] [ -Verbose ]");
+            Console.Out.WriteLine("Usage: NuGetPackageUpdatesDetector.exe (<path-to-packages-config-file> | <path-to-visual-studio-solution-file> | <path-to-solution-cop-config>) [ -Prerelease ] [ -Verbose ] [ -Source nuget-feed-url ]");
         }
 
         private void FindAvailableUpdatesForOnePackage(string packageId, SemanticVersion packageVersion, IVersionSpec packageVersionConstraint, IPackageRepository sourcePackageRepository, bool allowPrereleaseVersions, string contextDisplayName)
@@ -137,9 +138,17 @@ namespace NuGetPackageUpdatesDetector
                 remotePackage = sourcePackageRepository.FindPackage(packageId, packageVersionConstraint, allowPrereleaseVersions, true);
                 LookupCache.Add(cacheKey, remotePackage);
             }
-            if (remotePackage != null && remotePackage.Version > packageVersion)
+            if (remotePackage == null)
+            {
+                Log.WarnFormat("Package not found {0}", packageId);
+            }
+            else if (remotePackage.Version > packageVersion)
             {
                 Log.Info(x => x("Update {0} -> {1} found for package {2} in {3}", packageVersion, remotePackage.Version, packageId, contextDisplayName));
+            }
+            else
+            {
+                Log.DebugFormat("No new versions found for package {0} in {1}", packageId, contextDisplayName);
             }
         }
     }
