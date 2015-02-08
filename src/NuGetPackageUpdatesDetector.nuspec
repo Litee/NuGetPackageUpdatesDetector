@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>NuGetPackageUpdatesDetector</id>
+    <version>$version$</version>
+    <title>NuGet Package Updates Detector</title>
+    <authors>Andrey Lipatkin</authors>
+    <owners>litee</owners>
+    <copyright>2015 Andrey Lipatkin</copyright>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <projectUrl>https://github.com/Litee/NuGetPackageUpdatesDetector</projectUrl>
+    <!--<iconUrl></iconUrl>-->
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Command-line tool for detecting available updates of NuGet packages.</description>
+    <language>en-US</language>
+    <tags>VS, VisualStudio, StyleCop, FxCop, SolutionCop</tags>
+    <releaseNotes>https://github.com/Litee/NuGetPackageUpdatesDetector/releases</releaseNotes>
+  </metadata>
+  <files>
+    <file src="NuGetPackageUpdatesDetector\Bin\Debug\NuGetPackageUpdatesDetector.exe" target="tools/bin" />
+    <file src="NuGetPackageUpdatesDetector\Bin\Debug\NuGet.Core.dll" target="tools/bin" />
+    <file src="NuGetPackageUpdatesDetector\Bin\Debug\Microsoft.Web.XmlTransform.dll" target="tools/bin" />
+    <file src="NuGetPackageUpdatesDetector\Bin\Debug\Common.Logging.dll" target="tools/bin" />
+    <file src="NuGetPackageUpdatesDetector\Bin\Debug\Common.Logging.Core.dll" target="tools/bin" />
+  </files>
+</package>
