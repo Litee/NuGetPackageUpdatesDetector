@@ -7,4 +7,13 @@ SolutionCop config file format allows to specify version ranges. More details he
 
 ### How to get?
 
-nuget.exe install NuGetPackageUpdatesDetector
+NuGet.exe Install NuGetPackageUpdatesDetector
+
+### TODOs
+
+* Take platform into account
+* Support multiple NuGet sources
+
+### Recent changes
+
+0.1.0 - First stable version
