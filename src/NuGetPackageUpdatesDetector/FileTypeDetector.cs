@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Xml.Linq;
-using NuGet;
 
 namespace NuGetPackageUpdatesDetector
 {
@@ -21,7 +20,10 @@ namespace NuGetPackageUpdatesDetector
             {
                 try
                 {
-                    XDocument.Load(filePath).Element("Rules");
+                    if (XDocument.Load(filePath).Element("Rules") != null)
+                    {
+                        return FileType.SolutionCopConfig;
+                    }
                 }
                 catch (Exception)
                 {
