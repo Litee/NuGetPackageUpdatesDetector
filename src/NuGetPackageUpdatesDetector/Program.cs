@@ -140,7 +140,7 @@ namespace NuGetPackageUpdatesDetector
             }
             if (remotePackage == null)
             {
-                Log.WarnFormat("Package not found {0}", packageId);
+                Log.InfoFormat("No versions found for package {0}", packageId);
             }
             else if (remotePackage.Version > packageVersion)
             {
